@@ -221,7 +221,6 @@ class Calculator
     public function massConvert($base_dir = __DIR__, $currencies = [])
     {
         $save = true;
-        $dir = "{$base_dir}/conversions";
 
         if (is_array($base_dir)) {
             $currencies = $base_dir;
@@ -231,6 +230,7 @@ class Calculator
             $currencies = $this->conversions_we_care_about;
         }
 
+        $dir = "{$base_dir}/conversions";
         $currencies = array_keys($currencies);
         $out = [];
 
