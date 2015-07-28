@@ -220,9 +220,14 @@ class Calculator
 
     public function massConvert($base_dir = __DIR__, $currencies = [])
     {
-        $dir        = "{$base_dir}/conversions";
+        $save = true;
+        $dir = "{$base_dir}/conversions";
 
-        if (empty($currencies)) {
+        if (is_array($base_dir)) {
+            $currencies = $base_dir;
+            $base_dir = __DIR__;
+            $save = false;
+        } else if (!is_array($base_dir) && empty($currencies)) {
             $currencies = $this->conversions_we_care_about;
         }
 
@@ -232,7 +237,7 @@ class Calculator
         foreach ($currencies as $fromCurrencyCode) {
             $output_dir = "{$dir}/{$fromCurrencyCode}";
 
-            if (!file_exists($output_dir)) {
+            if ($save && !file_exists($output_dir)) {
                 mkdir($output_dir, 0777, true);
             }
 
@@ -244,10 +249,12 @@ class Calculator
                 $exchange_rate = $this->fetchConversion($fromCurrencyCode, $toCurrencyCode);
                 $out[$fromCurrencyCode][$toCurrencyCode] = $exchange_rate;
 
-                file_put_contents("{$output_dir}/{$toCurrencyCode}.json", json_encode([
-                    $fromCurrencyCode => 1,
-                    $toCurrencyCode => $exchange_rate,
-                ], JSON_PRETTY_PRINT));
+                if ($save) {
+                    file_put_contents("{$output_dir}/{$toCurrencyCode}.json", json_encode([
+                        $fromCurrencyCode => 1,
+                        $toCurrencyCode => $exchange_rate,
+                    ], JSON_PRETTY_PRINT));
+                }
             }
         }
 
