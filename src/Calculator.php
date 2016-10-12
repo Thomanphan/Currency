@@ -278,8 +278,7 @@ class Calculator
 
     protected function extractCurrency($input)
     {
-        $output = Str::find($input, "class=\"uccRes\"", "</tr>");
-        $output = Str::find($output, "class=\"rightCol\">", "&nbsp;");
+        $output = Str::find($output, "class=\"uccResultAmount\">", "<");
 
         return $output;
     }
